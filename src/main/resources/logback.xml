@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <!--    追加器，说明在什么地方进行日志的输出,使用class属性-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss} %-5level [%thread] %logger{30} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--    表明日志打印的跟标签，凡是debug级别以上的日志都会打印-->
+    <root level="debug">
+        <appender-ref ref="console"></appender-ref>
+    </root>
+</configuration>
