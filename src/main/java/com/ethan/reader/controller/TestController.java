@@ -13,7 +13,7 @@ public class TestController {
     @ResponseBody
     public Map test1(String content){
         Map result = new HashMap<>();
-        result.put("test","测试："+content);
+        result.put("test","测试,修改0.0.2分支"+content);
         return result;
     }
 }
