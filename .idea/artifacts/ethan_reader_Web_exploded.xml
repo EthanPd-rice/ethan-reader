@@ -27,6 +27,14 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:5.3.8" />
           <element id="library" level="project" name="Maven: org.springframework:spring-test:5.3.8" />
           <element id="library" level="project" name="Maven: org.springframework:spring-tx:5.3.8" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.2.3" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.2.3" />
+          <element id="library" level="project" name="Maven: com.baomidou:mybatis-plus-annotation:3.4.3.1" />
+          <element id="library" level="project" name="Maven: com.baomidou:mybatis-plus-core:3.4.3.1" />
+          <element id="library" level="project" name="Maven: com.baomidou:mybatis-plus-extension:3.4.3.1" />
+          <element id="library" level="project" name="Maven: com.baomidou:mybatis-plus:3.4.3.1" />
+          <element id="library" level="project" name="Maven: com.github.jsqlparser:jsqlparser:4.0" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
         </element>
       </element>
     </root>
