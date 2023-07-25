@@ -33,7 +33,8 @@
     <!--1.配置数据源-->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3306/ethan_reader?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai"/>
+        <property name="url"
+                  value="jdbc:mysql://localhost:3306/ethan_reader?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai"/>
         <property name="username" value="root"/>
         <property name="password" value="abc123456"/>
         <property name="initialSize" value="5"/>
@@ -41,7 +42,7 @@
     </bean>
     <!--2.配置SessionFactoryBean-->
     <!--SqlSessionFactoryBean用于根据配置信息创建SqlSessionFactory，不再需要我们自己编码创建-->
-<!--    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFa ctoryBean">-->
+    <!--    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFa ctoryBean">-->
     <bean id="sessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mappers/*.xml"/>
@@ -67,4 +68,25 @@
         <property name="dataSource" ref="dataSource"></property>
     </bean>
     <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--实例化一个默认的kaptcha对象-->
+    <bean id="kaptchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+        <property name="config">
+            <bean class="com.google.code.kaptcha.util.Config">
+                <constructor-arg>
+                    <props>
+                        <!--是否包含边框-->
+                        <prop key="kaptcha.border">no</prop>
+                        <!--图片长度-->
+                        <prop key="kaptcha.image.width">120</prop>
+                        <!--字体颜色-->
+                        <prop key="kaptcha.textproducer.font.color">blue</prop>
+                        <!--字体大小-->
+                        <prop key="kaptcha.textproducer.font.size">40</prop>
+                        <!--生成验证码要几个字符-->
+                        <prop key="kaptcha.textproducer.char.length">4</prop>
+                    </props>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
 </beans>
