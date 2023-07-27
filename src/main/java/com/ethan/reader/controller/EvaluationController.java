@@ -1,8 +1,10 @@
 package com.ethan.reader.controller;
 
+import com.ethan.reader.entity.Evaluation;
 import com.ethan.reader.service.EvaluationService;
 import com.ethan.reader.utils.ResponseUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +24,19 @@ public class EvaluationController {
             List<Map> maps = evaluationService.selectByBookId(bookId);
             responseUtils = new ResponseUtils().put("list",maps);
         }catch (Exception e){
+            e.printStackTrace();
+            responseUtils = new ResponseUtils(e.getClass().getSimpleName(),e.getMessage());
+        }
+        return responseUtils;
+    }
+
+    @PostMapping("/enjoy")
+    public ResponseUtils enjoy(Long evaluationId){
+        ResponseUtils responseUtils = null;
+        try{
+            Evaluation evaluation = evaluationService.enjoy(evaluationId);
+            responseUtils = new ResponseUtils().put("evaluation",evaluation);
+        }catch(Exception e){
             e.printStackTrace();
             responseUtils = new ResponseUtils(e.getClass().getSimpleName(),e.getMessage());
         }

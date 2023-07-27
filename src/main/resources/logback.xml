@@ -4,6 +4,7 @@
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{HH:mm:ss} %-5level [%thread] %logger{30} - %msg%n</pattern>
+            <charset>GBK</charset>
         </encoder>
     </appender>
     <!--    表明日志打印的跟标签，凡是debug级别以上的日志都会打印-->

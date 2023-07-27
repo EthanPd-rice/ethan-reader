@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 @Service
 @Transactional(propagation = Propagation.NOT_SUPPORTED,readOnly = true)
@@ -41,5 +42,25 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book selectById(Long bookId) {
         return bookMapper.selectById(bookId);
+    }
+
+    @Override
+    @Transactional(rollbackFor =  Exception.class)
+    public void updateScore() {
+        bookMapper.updateScore();
+    }
+
+    @Override
+    public IPage<Map> selectBookMap(Integer page, Integer rows) {
+        IPage p = new Page(page,rows);
+        p = bookMapper.selectBookMap(p);
+        return p;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Book createBook(Book book) {
+        bookMapper.insert(book);
+        return book;
     }
 }

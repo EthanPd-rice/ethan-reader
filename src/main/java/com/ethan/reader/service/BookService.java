@@ -3,6 +3,8 @@ package com.ethan.reader.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ethan.reader.entity.Book;
 
+import java.util.Map;
+
 public interface BookService {
     /**
      * 分页查询图书
@@ -20,4 +22,10 @@ public interface BookService {
      * @return 图书对象
      */
     public Book selectById(Long bookId);
+
+    public void updateScore();
+
+    public IPage<Map> selectBookMap(Integer page,Integer rows);
+
+    public Book createBook(Book book);
 }

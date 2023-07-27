@@ -1,6 +1,7 @@
 package com.ethan.reader.service;
 
 import com.ethan.reader.entity.Member;
+import com.ethan.reader.entity.MemberReadState;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 public class MemberServiceTest {
     @Resource
     private MemberService memberService;
+
     @Test
     public void createMember1() {
         memberService.createMember("imooc_4","test","i4");
@@ -35,4 +37,9 @@ public class MemberServiceTest {
         System.out.println(member);
     }
 
+    @Test
+    public void selectMemberReadState() {
+        MemberReadState memberReadState =memberService.selectMemberReadState(331l,5l);
+        System.out.println(memberReadState);
+    }
 }

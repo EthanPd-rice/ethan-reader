@@ -2,7 +2,9 @@ package com.ethan.reader.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ethan.reader.entity.Member;
+import com.ethan.reader.entity.MemberReadState;
 import com.ethan.reader.mapper.MemberMapper;
+import com.ethan.reader.mapper.MemberReadStateMapper;
 import com.ethan.reader.service.MemberService;
 import com.ethan.reader.service.exception.MemberException;
 import com.ethan.reader.utils.Md5Utils;
@@ -20,6 +22,8 @@ import java.util.Random;
 public class MemberServiceImpl implements MemberService {
     @Resource
     private MemberMapper memberMapper;
+    @Resource
+    private MemberReadStateMapper memberReadStateMapper;
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Member createMember(String username, String password, String nickname) {
@@ -59,6 +63,38 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member selectById(Long memberId) {
         return memberMapper.selectById(memberId);
+    }
+
+    @Override
+    public MemberReadState selectMemberReadState(Long memberId, Long bookId) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("member_id",memberId);
+        wrapper.eq("book_id",bookId);
+        MemberReadState memberReadState = memberReadStateMapper.selectOne(wrapper);
+        return memberReadState;
+    }
+
+
+
+    @Override
+    public MemberReadState updateMemberReadState(Long memberId, Long bookId, Integer readState) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("member_id",memberId);
+        wrapper.eq("book_id",bookId);
+        MemberReadState memberReadState = memberReadStateMapper.selectOne(wrapper);
+        if(memberReadState == null){
+            memberReadState = new MemberReadState();
+            memberReadState.setMemberId(memberId);
+            memberReadState.setBookId(bookId);
+            memberReadState.setReadState(readState);
+            memberReadState.setCreateTime(new Date());
+            memberReadStateMapper.insert(memberReadState);
+        }else{
+            memberReadState.setReadState(readState);
+            memberReadState.setCreateTime(new Date());
+            memberReadStateMapper.updateById(memberReadState);
+        }
+        return memberReadState;
     }
 
 }

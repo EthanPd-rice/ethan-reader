@@ -173,8 +173,28 @@
             }
         }
         , methods: {
+            showEvaluationList:function (bookId,isFlush){
+                const objApp = this;
+                axios.get("/api/evaluation/list?bookId="+bookId).then(function (response){
+                    const json = response.data;
+                    if(json.code ==0){
+                        if(isFlush){
+                            objApp.evaluationList.splice(0,objApp.evaluationList.length);
+                        }
+                        const list = json.data.list;
+                        list.forEach(function (item){
+                            item.ct = formatDate(item.create_time);
+                            objApp.evaluationList.push(item);
+                        })
+                        console.info(objApp.evaluationList);
+                    }else{
+                        console.error(json);
+                    }
+
+                })
+            }
             //显示短评对话框
-            showDialog:function(){
+            ,showDialog:function(){
                 const objApp = this;
                 if(!objApp.state.isLogin){
                     warnLogin("登录后才能进行评论哦");
@@ -190,12 +210,71 @@
             }
             ,updateReadState:function(readState){
                 //更新阅读状态
+                const memberId= sessionStorage.mid;
+                const bookId = getQueryString("bid");
+                const objApp = this;
+                if(!objApp.state.isLogin){
+                    warnLogin("登录后才能更新阅读状态");
+                    return;
+                }
+                const params = new URLSearchParams();
+                params.append("memberId",memberId);
+                params.append("bookId",bookId);
+                params.append("readState",readState);
+                axios.post("/api/member/update_read_state",params)
+                    .then(function (response){
+                        const json = response.data;
+                        if(json.code == 0){
+                            objApp.state.readState = json.data.readState.readState;
+                        }else{
+                            console.error(json)
+                        }
+                    })
             }
             ,onSubmit: function (formName) {
                 //提交短评功能
+                const form = this.$refs[formName];
+                const objApp = this;
+                const memberId = sessionStorage.mid;
+                const bookId = getQueryString("bid");
+                form.validate().then(function (){
+                    const params = new URLSearchParams();
+                    params.append("memberId",memberId);
+                    params.append("bookId",bookId);
+                    params.append("score",objApp.form.score);
+                    params.append("content",objApp.form.content);
+                    axios.post("/api/member/evaluate",params)
+                        .then(function (response){
+                            const json = response.data;
+                            if(json.code == 0){
+                                objApp.state.dialogVisible = false;
+                                objApp.form.score = 5;
+                                objApp.form.content = "";
+                                objApp.showEvaluationList(bookId,true);
+                            }
+                        })
+                })
             }
             ,enjoy : function(index){
                 //点赞功能
+                const memberId = sessionStorage.mid;
+                const objApp = this;
+                if(!objApp.state.isLogin){
+                    warnLogin("登录后才能为点赞评论！");
+                    return;
+                }
+                const evaluation = objApp.evaluationList[index];
+                const params = new URLSearchParams();
+                params.append("evaluationId",evaluation.evaluation_id)
+                axios.post("/api/evaluation/enjoy",params)
+                    .then(function (response){
+                        const json = response.data;
+                        if(json.code == 0){
+                            evaluation.enjoy = json.data.evaluation.enjoy;
+                        }else{
+                            console.error(json);
+                        }
+                    })
             }
         }
         , mounted() {
@@ -211,20 +290,7 @@
                     console.error(json);
                 }
             })
-            ,axios.get("/api/evaluation/list?bookId="+bookId).then(function (response){
-                const json = response.data;
-                if(json.code ==0){
-                    const list = json.data.list;
-                    list.forEach(function (item){
-                        item.ct = formatDate(item.create_time);
-                        objApp.evaluationList.push(item);
-                    })
-                    console.info(objApp.evaluationList);
-                }else{
-                    console.error(json);
-                }
-
-            })
+            objApp.showEvaluationList(bookId,false);
             const mid = sessionStorage.mid;
             if (mid != null){
                 axios.get("/api/member/select_by_id?memberId="+mid)
@@ -233,6 +299,19 @@
                         if(json.code == 0){
                             objApp.state.isLogin = true;
                             objApp.state.member = json.data.member;
+                        }else{
+                            console.error(json);
+                        }
+                    })
+                axios.get("/api/member/select_read_state?memberId="+mid+"&bookId="+bookId)
+                    .then(function (response){
+                        const json = response.data;
+                        if(json.code == "0"){
+                            if(json.data.readState != null){
+                                objApp.state.readState = json.data.readState.readState;
+                            }else{
+                                objApp.state.readState = -1;
+                            }
                         }else{
                             console.error(json);
                         }
